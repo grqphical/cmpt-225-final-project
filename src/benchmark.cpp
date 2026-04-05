@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
-#include <iostream>
 
 std::vector<int> generateSequentialArray(int n) {
     std::vector<int> result = std::vector<int>();
@@ -21,12 +20,11 @@ std::vector<int> generateRandomArray(int n) {
     return orderedArray;
 }
 
-void timeFunction(Benchmark func, std::vector<int> data, std::string funcName) {
+long timeFunction(Benchmark func, std::vector<int> data) {
     auto start = std::chrono::high_resolution_clock::now();
     func(data);
     auto end = std::chrono::high_resolution_clock::now();
 
     auto milliseconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Function " << funcName << " took " << milliseconds_elapsed << " to execute" << std::endl;
-    
+    return static_cast<long>(milliseconds_elapsed.count());
 }
