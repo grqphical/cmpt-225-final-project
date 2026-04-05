@@ -21,9 +21,9 @@ std::vector<int> generateRandomArray(int n) {
     return orderedArray;
 }
 
-void timeFunction(VoidFunction func, std::string funcName) {
+void timeFunction(Benchmark func, std::vector<int> data, std::string funcName) {
     auto start = std::chrono::high_resolution_clock::now();
-    func();
+    func(data);
     auto end = std::chrono::high_resolution_clock::now();
 
     auto milliseconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
