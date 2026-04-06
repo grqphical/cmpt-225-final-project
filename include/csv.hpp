@@ -1,15 +1,27 @@
 #pragma once
+#include <fstream>
 #include <string>
 #include <vector>
-#include <fstream> 
 
 // takes tabular data and outputs it to a file in CSV format
-class CSVWriter {
+template <typename T> class CSVWriter {
 public:
-    CSVWriter(std::string outputFileName, std::vector<std::string> header);
-    ~CSVWriter();
-    void WriteRow(std::vector<std::string>);
+  CSVWriter(std::string outputFileName, std::vector<T> header) {
+    outputFile.open(outputFileName);
+    WriteRow(header);
+  };
+  ~CSVWriter() { outputFile.close(); };
+  void WriteRow(std::vector<T> row) {
+    for (int i = 0; i < row.size(); i++) {
+        outputFile << row[i];
+        if (i < row.size() - 1) {
+            outputFile << ",";
+        } else {
+            outputFile << "\n";
+        }
+    }
+};
+
 private:
-    std::ofstream outputFile;
-    std::vector<std::vector<std::string>> table;
+  std::ofstream outputFile;
 };
