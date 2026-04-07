@@ -135,7 +135,7 @@ private:
     AVLNode<T>* restructure(AVLNode<T>* restructureAtNode) {
         // An unbalanced node must have at least a child of relative height 2
         
-        static_assert(restructureAtNode);
+        static_assert(restructureAtNode, "Unbalanced node must have at least a child of relative height 2");
 
         AVLNode<T>* z = restructureAtNode; // First unbalanced ancestor
         AVLNode<T>* y; // Heightest child of z
@@ -145,12 +145,12 @@ private:
         if (getHeight(z->left) > getHeight(z->right)) y = z->left;
         else y = z->right;
 
-        static_assert(y);
+        static_assert(y, "Unbalanced node must have at least a child of relative height 2");
 
         if (getHeight(y->left) > getHeight(y->right)) x = y->left;
         else x = y->right;
 
-        static_assert(x);
+        static_assert(x, "Unbalanced node must have at least a child of relative height 2");
 
         if (z->right == y && y->right == x) return rotateLeft(z); // RR
         else if (z->left == y && y->left == x) return rotateRight(z); // LL
