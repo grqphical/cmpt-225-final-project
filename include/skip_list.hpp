@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-const int maxSkipListLevell = 5;
+const int maxSkipListLevel = 5;
 
 class Node {
 public:
@@ -10,7 +10,6 @@ public:
     Node(int data, int level) : data(data), next(level + 1, nullptr) {}
 };
 
-template <typename T>
 class SkipList {
 public:
     SkipList();
