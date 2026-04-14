@@ -91,3 +91,21 @@ void SkipList::Remove(int data) {
     }
   }
 }
+
+bool SkipList::Search(int data) const {
+  Node *current = head;
+
+  for (int i = level; i >= 0; i--) {
+    while (current->next[i] and current->next[i]->data < data) {
+      current = current->next[i]; // moving forward
+    }
+  }
+
+  current = current->next[0];
+
+  if (current != nullptr && current->data == data) {
+    return true;
+  } else {
+    return false;
+  }
+}
