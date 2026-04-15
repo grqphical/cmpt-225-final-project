@@ -1,4 +1,4 @@
-#include "balanced_tree.hpp"
+#include "avl_tree.hpp"
 #include <queue>
 #include <iostream>
 #include <cmath>
