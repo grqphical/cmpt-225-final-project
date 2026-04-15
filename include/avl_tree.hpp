@@ -13,16 +13,32 @@ public:
 class AVLTree {
 public:
     AVLTree() = default;
-    ~AVLTree() = default;
+    ~AVLTree();
+
+    /* 4 Main Comparison Functions: Insert, Search, Delete, and Print */
 
     // Inserts a node to the tree (does not insert if the key is a duplicate)
     void insert(int key);
 
+    // Searches for a node in the tree and returns true (false if not found)
+    bool search(int key) const;
+
+    // Delete TODO
+
+    // Prints the level order traversal of the tree
+    void printLevelOrder() const;
+
+    /* Utility Functions */
+
+    // Searches for a node in the tree and returns the node (nullptr if not found)
+    AVLNode* searchNode(int key) const;
+
     // Returns the height of the node (0 if node is null)
     int getHeight(AVLNode* node) const;
 
-    // Prints the level order traversal of the tree
-    void levelOrder() const;
+    // Returns the number of nodes in the tree.
+    // Does so recursively so other operations' speed won't be impacted when comparing
+    int getSize() const;
 
     // Testing function to ensure the tree has the BST sorted property
     bool isSorted() const;
@@ -32,6 +48,10 @@ public:
 
 private:
     AVLNode* root = nullptr;
+
+    /* Core Helper Functions*/
+
+    void freeHelper(AVLNode* node);
 
     // Updates height of the given node
     void updateHeight(AVLNode* updateNode);
@@ -49,6 +69,12 @@ private:
 
     // Rotates the tree where given a node with an unblanced factor
     AVLNode* restructure(AVLNode* restructureAtNode);
+
+    /* Utility Helper Functions */
+
+    int getSizeHelper(AVLNode* node) const;
+
+    AVLNode* searchHelper(AVLNode* node, int key) const;
     
     bool isSortedHelper(AVLNode* node) const;
 

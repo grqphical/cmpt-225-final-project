@@ -9,9 +9,21 @@ using std::abs;
 
 // Public Methods
 
+AVLTree::~AVLTree() {
+    freeHelper(this->root);
+}
+
 void AVLTree::insert(int key) {
     this->root = insertHelper(this->root, key);
     updateHeight(this->root);
+}
+
+bool AVLTree::search(int key) const {
+    return searchHelper(this->root, key);
+}
+
+AVLNode* AVLTree::searchNode(int key) const {
+    return searchHelper(this->root, key);
 }
 
 int AVLTree::getHeight(AVLNode* node) const {
@@ -19,23 +31,32 @@ int AVLTree::getHeight(AVLNode* node) const {
     return node->height;
 }
 
-void AVLTree::levelOrder() const {
+int AVLTree::getSize() const {
+    return getSizeHelper(this->root);
+}
+
+void AVLTree::printLevelOrder() const {
     if (!this->root) return;
 
     queue<AVLNode*> q;
     q.push(this->root);
     
+    int levelSize = 0;
+    cout << '\n';
     while (!q.empty()) {
+        if (levelSize == 0) levelSize = q.size();
         AVLNode* node = q.front();
         q.pop();
+        levelSize--;
 
-        cout << "Key: " << node->key;
+        cout << "K-" << node->key << " ";
 
-        if (q.empty()) cout << '\n';
+        if (levelSize == 0) cout << '\n';
 
         if (node->left) q.push(node->left);
         if (node->right) q.push(node->right);
     }
+    cout << '\n';
 }
 
 bool AVLTree::isSorted() const {
@@ -47,6 +68,13 @@ bool AVLTree::isBalanced() const {
 }
 
 // Private Methods
+
+void AVLTree::freeHelper(AVLNode* node) {
+    if (!node) return;
+    freeHelper(node->left);
+    freeHelper(node->right);
+    delete node;
+}
 
 void AVLTree::updateHeight(AVLNode* updateNode) {
     if (!updateNode) return;
@@ -98,6 +126,25 @@ AVLNode* AVLTree::insertHelper(AVLNode* insertAtNode, int key) {
     }
 
     return insertAtNode;
+}
+
+int AVLTree::getSizeHelper(AVLNode* node) const {
+    if (!node) return 0;
+    
+    return 1 + getSizeHelper(node->left) + getSizeHelper(node->right);
+}
+
+AVLNode* AVLTree::searchHelper(AVLNode* node, int key) const {
+    if (!node) return nullptr;
+
+    if (node->key == key) return node;
+
+    AVLNode* left = searchHelper(node->left, key);
+    if (left) return left;
+    AVLNode* right = searchHelper(node->right, key);
+    if (right) return right;
+
+    return nullptr;
 }
 
 AVLNode* AVLTree::restructure(AVLNode* restructureAtNode) {
