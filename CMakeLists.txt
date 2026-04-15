@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # To build: `cmake -S . -B build`
+# Then: `cmake --build build`
 # To test: `cd build && ctest`
 
 # GoogleTest
@@ -25,6 +26,7 @@ enable_testing()
 add_executable(
   avl_test
   tests/avl_test.cc
+  src/avl_tree.cpp
 )
 target_link_libraries(
   avl_test
