@@ -45,6 +45,6 @@ gtest_discover_tests(avl_test)
 
 include_directories(include)
 
-add_executable(benchmark src/benchmark.cpp src/skip_list.cpp src/avl_tree.cpp src/main.cpp)
+add_executable(benchmark src/skip_list.cpp src/avl_tree.cpp src/main.cpp)
 
 target_compile_options(benchmark PUBLIC -O3)
