@@ -11,7 +11,7 @@
 
 // Higher run count for search/delete to get better averages
 #define BATCH_SIZE 10000 
-#define DATA_SIZE 100000
+#define DATA_SIZE 10000000
 
 /**
  * Helper to get time in nanoseconds
