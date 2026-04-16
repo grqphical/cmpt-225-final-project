@@ -39,6 +39,19 @@ int main() {
   long averageRunTime = calculate_average(results);
   writer->WriteRow({"Random Insertion", std::to_string(averageRunTime)});
 
+  std::cout << "Running ordered insertion on Skip List..." << std::endl;
+
+  std::vector<int> orderedData = generateSequentialArray(10000);
+  for (int i = 0; i < BENCHMARK_RUN_COUNT; i++) {
+
+    results[i] = timeFunction(benchmark_skip_list_insertion, orderedData);
+    if (i % 100 == 0) {
+      std::cout << "Ran " << i << " benchmarks..." << std::endl;
+    }
+  }
+  averageRunTime = calculate_average(results);
+  writer->WriteRow({"Ordered Insertion", std::to_string(averageRunTime)});
+
   delete writer;
 
   return 0;
