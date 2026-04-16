@@ -44,33 +44,21 @@ std::vector<int> generateRandomArray(int n)
     return orderedArray;
 }
 
-int64_t getNthFibonacci(int64_t n)
-{
-    int64_t a = 0;
-    int64_t b = 1;
-    for (int64_t i = 31; i >= 0; i--)
-    {
-        int64_t d = a * (b * 2 - a);
-        int64_t e = a * a + b * b;
-        a = d;
-        b = e;
-        if ((((unsigned int64_t)n >> i) & 1) != 0)
-        {
-            int c = a + b;
-            a = b;
-            b = c;
-        }
-    }
-    return a;
-}
-
 std::vector<int64_t> generateFibonacciArray(int64_t n)
 {
+    if (n <= 0)
+        return {};
     std::vector<int64_t> result = std::vector<int64_t>();
     result.reserve(n);
-    for (int i = 0; i < n; i++)
+
+    result.push_back(0);
+    if (n == 1)
+        return result;
+    result.push_back(1);
+
+    for (int i = 2; i < n; i++)
     {
-        result.push_back(getNthFibonacci(i));
+        result.push_back(result[i - 1] + result[i - 2]);
     }
     return result;
 }
