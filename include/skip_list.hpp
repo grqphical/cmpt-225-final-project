@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <algorithm>
+#include <cstdint>
+using std::int64_t;
 
 const int64_t maxSkipListLevel = 16; // Increased for better distribution
 

@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdint>
+using std::int64_t;
 
 class AVLNode
 {

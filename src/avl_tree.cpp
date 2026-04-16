@@ -5,6 +5,7 @@
 #include <cassert>
 using std::abs;
 using std::cout;
+using std::int64_t;
 using std::queue;
 
 // Public Methods
@@ -284,12 +285,12 @@ AVLNode *AVLTree::restructure(AVLNode *restructureAtNode)
         return rotateRight(z); // LL, so rotate right
     else if (z->right == y && y->left == x)
     {                              // RL
-        z->right = rotateRight(y); // first make it int64_to a rightward chain
+        z->right = rotateRight(y); // first make it into a rightward chain
         return rotateLeft(z);      // now it's RR, so rotate left
     }
     else if (z->left == y && y->right == x)
     {                            // LR
-        z->left = rotateLeft(y); // first make it int64_to a leftward chain
+        z->left = rotateLeft(y); // first make it into a leftward chain
         return rotateRight(z);   // then it's LL, so rotate right
     }
 

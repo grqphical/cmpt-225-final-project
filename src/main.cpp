@@ -8,6 +8,8 @@
 #include <numeric>
 #include <algorithm>
 #include <random>
+#include <cstdint>
+using std::int64_t;
 
 // Higher run count for search/delete to get better averages
 #define BATCH_SIZE 10000
