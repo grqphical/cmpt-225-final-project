@@ -10,29 +10,33 @@
 #include <random>
 
 // Higher run count for search/delete to get better averages
-#define BATCH_SIZE 10000 
+#define BATCH_SIZE 10000
 #define DATA_SIZE 10000000
 
 /**
  * Helper to get time in nanoseconds
  */
-double get_nanos_per_op(std::chrono::high_resolution_clock::time_point start, 
-                        std::chrono::high_resolution_clock::time_point end, 
-                        int count) {
+double get_nanos_per_op(std::chrono::high_resolution_clock::time_point start,
+                        std::chrono::high_resolution_clock::time_point end,
+                        int count)
+{
     auto total = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
     return static_cast<double>(total) / count;
 }
 
-std::vector<int> generateSequentialArray(int n) {
+std::vector<int> generateSequentialArray(int n)
+{
     std::vector<int> result = std::vector<int>();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         result.push_back(i);
     }
 
     return result;
 }
 
-std::vector<int> generateRandomArray(int n) {
+std::vector<int> generateRandomArray(int n)
+{
     std::vector<int> orderedArray = generateSequentialArray(n);
     std::random_device rd;
     std::mt19937 g(rd());
@@ -40,13 +44,46 @@ std::vector<int> generateRandomArray(int n) {
     return orderedArray;
 }
 
-int main() {
+int64_t getNthFibonacci(int64_t n)
+{
+    int64_t a = 0;
+    int64_t b = 1;
+    for (int64_t i = 31; i >= 0; i--)
+    {
+        int64_t d = a * (b * 2 - a);
+        int64_t e = a * a + b * b;
+        a = d;
+        b = e;
+        if ((((unsigned int64_t)n >> i) & 1) != 0)
+        {
+            int c = a + b;
+            a = b;
+            b = c;
+        }
+    }
+    return a;
+}
+
+std::vector<int64_t> generateFibonacciArray(int64_t n)
+{
+    std::vector<int64_t> result = std::vector<int64_t>();
+    result.reserve(n);
+    for (int i = 0; i < n; i++)
+    {
+        result.push_back(getNthFibonacci(i));
+    }
+    return result;
+}
+
+int main()
+{
     std::vector<int> randomData = generateRandomArray(DATA_SIZE);
     std::vector<int> orderedData = generateSequentialArray(DATA_SIZE);
-    
+
     // Pre-generate random indices for searching/deletion to avoid timing rand()
     std::vector<int> targets;
-    for(int i = 0; i < BATCH_SIZE; i++) {
+    for (int i = 0; i < BATCH_SIZE; i++)
+    {
         targets.push_back(randomData[rand() % DATA_SIZE]);
     }
 
@@ -57,14 +94,16 @@ int main() {
     // Skip List
     auto start = std::chrono::high_resolution_clock::now();
     SkipList sl_rand;
-    for (int i : randomData) sl_rand.Insert(i);
+    for (int i : randomData)
+        sl_rand.Insert(i);
     auto end = std::chrono::high_resolution_clock::now();
     random_insertion_writer->WriteRow({"Skip List", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
 
     // AVL Tree
     start = std::chrono::high_resolution_clock::now();
     AVLTree avl_rand;
-    for (int i : randomData) avl_rand.Insert(i);
+    for (int i : randomData)
+        avl_rand.Insert(i);
     end = std::chrono::high_resolution_clock::now();
     random_insertion_writer->WriteRow({"AVL Tree", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
 
@@ -73,19 +112,21 @@ int main() {
     // --- ORDERED INSERTION BENCHMARK ---
     std::cout << "Running ordered insertion benchmark..." << std::endl;
     CSVWriter<std::string> *ordered_insertion_writer = new CSVWriter<std::string>("ordered_insertion.csv", {"Data Structure", "Avg Time (ns)"});
-    
+
     start = std::chrono::high_resolution_clock::now();
     SkipList sl_ord;
-    for (int i : orderedData) sl_ord.Insert(i);
+    for (int i : orderedData)
+        sl_ord.Insert(i);
     end = std::chrono::high_resolution_clock::now();
     ordered_insertion_writer->WriteRow({"Skip List", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
 
     start = std::chrono::high_resolution_clock::now();
     AVLTree avl_ord;
-    for (int i : orderedData) avl_ord.Insert(i);
+    for (int i : orderedData)
+        avl_ord.Insert(i);
     end = std::chrono::high_resolution_clock::now();
     ordered_insertion_writer->WriteRow({"AVL Tree", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
-    
+
     delete ordered_insertion_writer;
 
     // --- SEARCHING BENCHMARK ---
@@ -93,15 +134,17 @@ int main() {
     CSVWriter<std::string> *searching_writer = new CSVWriter<std::string>("searching.csv", {"Data Structure", "Avg Time (ns)"});
 
     start = std::chrono::high_resolution_clock::now();
-    for (int target : targets) sl_rand.Search(target);
+    for (int target : targets)
+        sl_rand.Search(target);
     end = std::chrono::high_resolution_clock::now();
     searching_writer->WriteRow({"Skip List", std::to_string(get_nanos_per_op(start, end, BATCH_SIZE))});
 
     start = std::chrono::high_resolution_clock::now();
-    for (int target : targets) avl_rand.Search(target);
+    for (int target : targets)
+        avl_rand.Search(target);
     end = std::chrono::high_resolution_clock::now();
     searching_writer->WriteRow({"AVL Tree", std::to_string(get_nanos_per_op(start, end, BATCH_SIZE))});
-    
+
     delete searching_writer;
 
     // --- DELETION BENCHMARK ---
@@ -110,7 +153,8 @@ int main() {
 
     // Benchmark Skip List Deletion
     start = std::chrono::high_resolution_clock::now();
-    for (int target : targets) {
+    for (int target : targets)
+    {
         sl_rand.Remove(target);
     }
     end = std::chrono::high_resolution_clock::now();
@@ -118,7 +162,8 @@ int main() {
 
     // Benchmark AVL Deletion
     start = std::chrono::high_resolution_clock::now();
-    for (int target : targets) {
+    for (int target : targets)
+    {
         avl_rand.Delete(target);
     }
     end = std::chrono::high_resolution_clock::now();
