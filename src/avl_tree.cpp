@@ -3,167 +3,210 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
-using std::queue;
-using std::cout;
 using std::abs;
+using std::cout;
+using std::int64_t;
+using std::queue;
 
 // Public Methods
 
-AVLTree::~AVLTree() {
+AVLTree::~AVLTree()
+{
     freeHelper(this->root);
 }
 
-void AVLTree::Insert(int key) {
+void AVLTree::Insert(int64_t key)
+{
     this->root = insertHelper(this->root, key);
     updateHeight(this->root);
 }
 
-bool AVLTree::Search(int key) const {
+bool AVLTree::Search(int64_t key) const
+{
     return searchHelper(this->root, key);
 }
 
-void AVLTree::Delete(int key) {
+void AVLTree::Delete(int64_t key)
+{
     this->root = deleteHelper(this->root, key);
     updateHeight(this->root);
 }
 
-void AVLTree::Print() const {
-    if (!this->root) return;
+void AVLTree::Print() const
+{
+    if (!this->root)
+        return;
 
-    queue<AVLNode*> q;
+    queue<AVLNode *> q;
     q.push(this->root);
-    
-    int levelSize = 0;
+
+    int64_t levelSize = 0;
     cout << '\n';
-    while (!q.empty()) {
-        if (levelSize == 0) levelSize = q.size();
-        AVLNode* node = q.front();
+    while (!q.empty())
+    {
+        if (levelSize == 0)
+            levelSize = q.size();
+        AVLNode *node = q.front();
         q.pop();
         levelSize--;
 
         cout << "K-" << node->key << " ";
 
-        if (levelSize == 0) cout << '\n';
+        if (levelSize == 0)
+            cout << '\n';
 
-        if (node->left) q.push(node->left);
-        if (node->right) q.push(node->right);
+        if (node->left)
+            q.push(node->left);
+        if (node->right)
+            q.push(node->right);
     }
     cout << '\n';
 }
 
-AVLNode* AVLTree::searchNode(int key) const {
+AVLNode *AVLTree::searchNode(int64_t key) const
+{
     return searchHelper(this->root, key);
 }
 
-int AVLTree::getHeight(AVLNode* node) const {
-    if (!node) return 0;
+int64_t AVLTree::getHeight(AVLNode *node) const
+{
+    if (!node)
+        return 0;
     return node->height;
 }
 
-int AVLTree::getSize() const {
+int64_t AVLTree::getSize() const
+{
     return getSizeHelper(this->root);
 }
 
-bool AVLTree::isSorted() const {
+bool AVLTree::isSorted() const
+{
     return isSortedHelper(this->root);
 }
 
-bool AVLTree::isBalanced() const {
+bool AVLTree::isBalanced() const
+{
     return isBalancedHelper(this->root);
 }
 
 // Private Methods
 
-void AVLTree::freeHelper(AVLNode* node) {
-    if (!node) return;
+void AVLTree::freeHelper(AVLNode *node)
+{
+    if (!node)
+        return;
     freeHelper(node->left);
     freeHelper(node->right);
     delete node;
 }
 
-void AVLTree::updateHeight(AVLNode* updateNode) {
-    if (!updateNode) return;
+void AVLTree::updateHeight(AVLNode *updateNode)
+{
+    if (!updateNode)
+        return;
     updateNode->height = 1 + std::max(getHeight(updateNode->left), getHeight(updateNode->right));
 }
 
-AVLNode* AVLTree::rotateLeft(AVLNode* node) {
-    if (!node || !node->right) return nullptr;
-    AVLNode* z = node;
-    AVLNode* y = node->right;
+AVLNode *AVLTree::rotateLeft(AVLNode *node)
+{
+    if (!node || !node->right)
+        return nullptr;
+    AVLNode *z = node;
+    AVLNode *y = node->right;
     z->right = y->left; // z takes over y's left child
-    y->left = z; // y becomes the new root
+    y->left = z;        // y becomes the new root
     updateHeight(z);
     updateHeight(y);
     return y;
 }
 
-AVLNode* AVLTree::rotateRight(AVLNode* node) {
-    if (!node || !node->left) return nullptr;
-    AVLNode* z = node;
-    AVLNode* y = node->left;
+AVLNode *AVLTree::rotateRight(AVLNode *node)
+{
+    if (!node || !node->left)
+        return nullptr;
+    AVLNode *z = node;
+    AVLNode *y = node->left;
     z->left = y->right; // z takes over y's right child
-    y->right = z; // y becomes the new root
+    y->right = z;       // y becomes the new root
     updateHeight(z);
     updateHeight(y);
     return y;
 }
 
-bool AVLTree::isBalancedFactored(AVLNode* node) const {
+bool AVLTree::isBalancedFactored(AVLNode *node) const
+{
     return std::abs(getHeight(node->left) - getHeight(node->right)) <= 1;
 }
 
-AVLNode* AVLTree::insertHelper(AVLNode* insertAtNode, int key) {
+AVLNode *AVLTree::insertHelper(AVLNode *insertAtNode, int64_t key)
+{
     // Base case
-    if (!insertAtNode) {
+    if (!insertAtNode)
+    {
         return new AVLNode(key);
     }
 
     // Recursively inserting based on the BST's sorted property
-    if (insertAtNode->key > key) insertAtNode->left = insertHelper(insertAtNode->left, key);
-    else if (insertAtNode->key < key) insertAtNode->right = insertHelper(insertAtNode->right, key);
-    else return insertAtNode; // Duplicate key case
+    if (insertAtNode->key > key)
+        insertAtNode->left = insertHelper(insertAtNode->left, key);
+    else if (insertAtNode->key < key)
+        insertAtNode->right = insertHelper(insertAtNode->right, key);
+    else
+        return insertAtNode; // Duplicate key case
 
     updateHeight(insertAtNode);
 
     // Ensuring balance factor is kept
-    if (!isBalancedFactored(insertAtNode)) {
+    if (!isBalancedFactored(insertAtNode))
+    {
         insertAtNode = restructure(insertAtNode);
     }
 
     return insertAtNode;
 }
 
-AVLNode* AVLTree::deleteHelper(AVLNode* deleteAtNode, int key) {
+AVLNode *AVLTree::deleteHelper(AVLNode *deleteAtNode, int64_t key)
+{
     // Base case
-    if (!deleteAtNode) return nullptr;
+    if (!deleteAtNode)
+        return nullptr;
 
     // Deletion
-    if (deleteAtNode->key == key) {
-        AVLNode* toReturn = nullptr;
+    if (deleteAtNode->key == key)
+    {
+        AVLNode *toReturn = nullptr;
 
-        if (deleteAtNode->left && deleteAtNode->right) { // two children case
+        if (deleteAtNode->left && deleteAtNode->right)
+        { // two children case
             // We swap the key so now current node is successor and the other node is deleted
 
             // Successor is smallest of right subtree
-            AVLNode* successor = deleteAtNode->right;
-            while (successor->left) successor = successor->left;
+            AVLNode *successor = deleteAtNode->right;
+            while (successor->left)
+                successor = successor->left;
 
             // Swapping and then deleting successor
             deleteAtNode->key = successor->key;
             successor->key = key;
             deleteAtNode->right = deleteHelper(deleteAtNode->right, key);
-            
-            // Maintain tree properties
+
+            // Maint64_tain tree properties
             updateHeight(deleteAtNode);
-            if (!isBalancedFactored(deleteAtNode)) {
+            if (!isBalancedFactored(deleteAtNode))
+            {
                 deleteAtNode = restructure(deleteAtNode);
             }
 
             // Return current node as we are done
             return deleteAtNode;
-        } else if (deleteAtNode->left) {
+        }
+        else if (deleteAtNode->left)
+        {
             toReturn = deleteAtNode->left;
-        } else if (deleteAtNode->right) {
+        }
+        else if (deleteAtNode->right)
+        {
             toReturn = deleteAtNode->right;
         }
 
@@ -173,73 +216,96 @@ AVLNode* AVLTree::deleteHelper(AVLNode* deleteAtNode, int key) {
     }
 
     // Recursively deleting based on the BST's sorted property
-    if (deleteAtNode->key > key) deleteAtNode->left = deleteHelper(deleteAtNode->left, key);
-    else deleteAtNode->right = deleteHelper(deleteAtNode->right, key);
+    if (deleteAtNode->key > key)
+        deleteAtNode->left = deleteHelper(deleteAtNode->left, key);
+    else
+        deleteAtNode->right = deleteHelper(deleteAtNode->right, key);
 
     updateHeight(deleteAtNode);
 
     // Ensuring balance factor is kept
-    if (!isBalancedFactored(deleteAtNode)) {
+    if (!isBalancedFactored(deleteAtNode))
+    {
         deleteAtNode = restructure(deleteAtNode);
     }
 
     return deleteAtNode;
 }
 
-int AVLTree::getSizeHelper(AVLNode* node) const {
-    if (!node) return 0;
-    
+int64_t AVLTree::getSizeHelper(AVLNode *node) const
+{
+    if (!node)
+        return 0;
+
     return 1 + getSizeHelper(node->left) + getSizeHelper(node->right);
 }
 
-AVLNode* AVLTree::searchHelper(AVLNode* node, int key) const {
-    if (!node) return nullptr; // Base case
+AVLNode *AVLTree::searchHelper(AVLNode *node, int64_t key) const
+{
+    if (!node)
+        return nullptr; // Base case
 
     // Searches using BST's ordering property
-    if (node->key == key) return node;
-    else if (node->key > key) return searchHelper(node->left, key);
-    else return searchHelper(node->right, key);
+    if (node->key == key)
+        return node;
+    else if (node->key > key)
+        return searchHelper(node->left, key);
+    else
+        return searchHelper(node->right, key);
 }
 
-AVLNode* AVLTree::restructure(AVLNode* restructureAtNode) {
+AVLNode *AVLTree::restructure(AVLNode *restructureAtNode)
+{
     // An unbalanced node must have at least a child of relative height 2
-    
+
     assert(restructureAtNode && "Unbalanced node must have at least a child of relative height 2");
 
-    AVLNode* z = restructureAtNode; // First unbalanced ancestor
-    AVLNode* y; // Heightest child of z
-    AVLNode* x; // Heightest child of y
+    AVLNode *z = restructureAtNode; // First unbalanced ancestor
+    AVLNode *y;                     // Heightest child of z
+    AVLNode *x;                     // Heightest child of y
 
     // Getting y and z
-    if (getHeight(z->left) > getHeight(z->right)) y = z->left;
-    else y = z->right;
+    if (getHeight(z->left) > getHeight(z->right))
+        y = z->left;
+    else
+        y = z->right;
 
     assert(y && "Unbalanced node must have at least a child of relative height 2");
 
-    if (getHeight(y->left) > getHeight(y->right)) x = y->left;
-    else x = y->right;
+    if (getHeight(y->left) > getHeight(y->right))
+        x = y->left;
+    else
+        x = y->right;
 
     assert(x && "Unbalanced node must have at least a child of relative height 2");
 
-    if (z->right == y && y->right == x) return rotateLeft(z); // RR, so rotate left
-    else if (z->left == y && y->left == x) return rotateRight(z); // LL, so rotate right
-    else if (z->right == y && y->left == x) { // RL
+    if (z->right == y && y->right == x)
+        return rotateLeft(z); // RR, so rotate left
+    else if (z->left == y && y->left == x)
+        return rotateRight(z); // LL, so rotate right
+    else if (z->right == y && y->left == x)
+    {                              // RL
         z->right = rotateRight(y); // first make it into a rightward chain
-        return rotateLeft(z); // now it's RR, so rotate left
+        return rotateLeft(z);      // now it's RR, so rotate left
     }
-    else if (z->left == y && y->right == x) { // LR
+    else if (z->left == y && y->right == x)
+    {                            // LR
         z->left = rotateLeft(y); // first make it into a leftward chain
-        return rotateRight(z); // then it's LL, so rotate right
+        return rotateRight(z);   // then it's LL, so rotate right
     }
 
     return z;
 }
 
-bool AVLTree::isSortedHelper(AVLNode* node) const {
-    if (!node) return true;
+bool AVLTree::isSortedHelper(AVLNode *node) const
+{
+    if (!node)
+        return true;
 
-    if (node->left && node->left->key >= node->key) return false;
-    if (node->right && node->right->key <= node->key) return false;
+    if (node->left && node->left->key >= node->key)
+        return false;
+    if (node->right && node->right->key <= node->key)
+        return false;
 
     bool leftCheck = isSortedHelper(node->left);
     bool rightCheck = isSortedHelper(node->right);
@@ -247,10 +313,13 @@ bool AVLTree::isSortedHelper(AVLNode* node) const {
     return leftCheck && rightCheck;
 }
 
-bool AVLTree::isBalancedHelper(AVLNode* node) const {
-    if (!node) return true;
+bool AVLTree::isBalancedHelper(AVLNode *node) const
+{
+    if (!node)
+        return true;
 
-    if (!isBalancedFactored(node)) return false;
+    if (!isBalancedFactored(node))
+        return false;
 
     bool leftCheck = isBalancedHelper(node->left);
     bool rightCheck = isBalancedHelper(node->right);
