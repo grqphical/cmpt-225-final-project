@@ -9,6 +9,7 @@ SkipList::SkipList()
 
 SkipList::~SkipList()
 {
+    // make sure every node gets deleted
     Node *curr = head->next[0];
     while (curr)
     {
