@@ -25,6 +25,6 @@ long timeFunction(Benchmark func, std::vector<int> data) {
     func(data);
     auto end = std::chrono::high_resolution_clock::now();
 
-    auto milliseconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    auto milliseconds_elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     return static_cast<long>(milliseconds_elapsed.count());
 }
