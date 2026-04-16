@@ -1,11 +1,8 @@
 """
 Expects data in the form:
 
-Name,Skip List,AVL Tree
-Random Insertion,1000,1500
-Ordered Insertion,1200,800
-Searching,400,600
-Removal,380,240
+Data Structure,Time
+Skip List,120
 """
 
 import pandas as pd
@@ -23,11 +20,11 @@ df = pd.read_csv(args.file)
 
 df.set_index("Data Structure", inplace=True)
 
-ax = df.plot(kind="bar", figsize=(10, 6))
+ax = df.plot(kind="bar", figsize=(10, 6), color=plt.cm.Set3(range(len(df.columns))))
 
 plt.title(args.title)
 plt.xlabel("Test Cases")
-plt.ylabel("Time (μs)")
+plt.ylabel("Time (ns)")
 plt.xticks(rotation=0)
 
 plt.tight_layout()
