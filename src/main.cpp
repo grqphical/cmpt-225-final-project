@@ -69,6 +69,7 @@ int main()
 {
     std::vector<int> randomData = generateRandomArray(DATA_SIZE);
     std::vector<int> orderedData = generateSequentialArray(DATA_SIZE);
+    std::vector<int64_t> fibonacciData = generateFibonacciArray(DATA_SIZE);
 
     // Pre-generate random indices for searching/deletion to avoid timing rand()
     std::vector<int> targets;
@@ -118,6 +119,26 @@ int main()
     ordered_insertion_writer->WriteRow({"AVL Tree", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
 
     delete ordered_insertion_writer;
+
+    // --- FIBONACCI INSERTION BENCHMARK ---
+    std::cout << "Running fibonacci insertion benchmark..." << std::endl;
+    CSVWriter<std::string> *fibonacci_insertion_writer = new CSVWriter<std::string>("fibonacci_insertion.csv", {"Data Structure", "Avg Time (ns)"});
+
+    start = std::chrono::high_resolution_clock::now();
+    SkipList sl_fib;
+    for (int i : fibonacciData)
+        sl_fib.Insert(i);
+    end = std::chrono::high_resolution_clock::now();
+    fibonacci_insertion_writer->WriteRow({"Skip List", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
+
+    start = std::chrono::high_resolution_clock::now();
+    AVLTree avl_fib;
+    for (int i : fibonacciData)
+        avl_fib.Insert(i);
+    end = std::chrono::high_resolution_clock::now();
+    fibonacci_insertion_writer->WriteRow({"AVL Tree", std::to_string(get_nanos_per_op(start, end, DATA_SIZE))});
+
+    delete fibonacci_insertion_writer;
 
     // --- SEARCHING BENCHMARK ---
     std::cout << "Running search benchmark..." << std::endl;

@@ -4,7 +4,7 @@
 #include <cstdint>
 using std::int64_t;
 
-const int64_t maxSkipListLevel = 16; // Increased for better distribution
+const int64_t maxSkipListLevel = 32; // Increased for better distribution
 
 class Node
 {
