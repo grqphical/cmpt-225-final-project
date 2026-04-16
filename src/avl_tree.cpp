@@ -13,29 +13,21 @@ AVLTree::~AVLTree() {
     freeHelper(this->root);
 }
 
-void AVLTree::insert(int key) {
+void AVLTree::Insert(int key) {
     this->root = insertHelper(this->root, key);
     updateHeight(this->root);
 }
 
-bool AVLTree::search(int key) const {
+bool AVLTree::Search(int key) const {
     return searchHelper(this->root, key);
 }
 
-AVLNode* AVLTree::searchNode(int key) const {
-    return searchHelper(this->root, key);
+void AVLTree::Delete(int key) {
+    this->root = deleteHelper(this->root, key);
+    updateHeight(this->root);
 }
 
-int AVLTree::getHeight(AVLNode* node) const {
-    if (!node) return 0;
-    return node->height;
-}
-
-int AVLTree::getSize() const {
-    return getSizeHelper(this->root);
-}
-
-void AVLTree::printLevelOrder() const {
+void AVLTree::Print() const {
     if (!this->root) return;
 
     queue<AVLNode*> q;
@@ -57,6 +49,19 @@ void AVLTree::printLevelOrder() const {
         if (node->right) q.push(node->right);
     }
     cout << '\n';
+}
+
+AVLNode* AVLTree::searchNode(int key) const {
+    return searchHelper(this->root, key);
+}
+
+int AVLTree::getHeight(AVLNode* node) const {
+    if (!node) return 0;
+    return node->height;
+}
+
+int AVLTree::getSize() const {
+    return getSizeHelper(this->root);
 }
 
 bool AVLTree::isSorted() const {
@@ -126,6 +131,59 @@ AVLNode* AVLTree::insertHelper(AVLNode* insertAtNode, int key) {
     }
 
     return insertAtNode;
+}
+
+AVLNode* AVLTree::deleteHelper(AVLNode* deleteAtNode, int key) {
+    // Base case
+    if (!deleteAtNode) return nullptr;
+
+    // Deletion
+    if (deleteAtNode->key == key) {
+        AVLNode* toReturn = nullptr;
+
+        if (deleteAtNode->left && deleteAtNode->right) { // two children case
+            // We swap the key so now current node is successor and the other node is deleted
+
+            // Successor is smallest of right subtree
+            AVLNode* successor = deleteAtNode->right;
+            while (successor->left) successor = successor->left;
+
+            // Swapping and then deleting successor
+            deleteAtNode->key = successor->key;
+            successor->key = key;
+            deleteAtNode->right = deleteHelper(deleteAtNode->right, key);
+            
+            // Maintain tree properties
+            updateHeight(deleteAtNode);
+            if (!isBalancedFactored(deleteAtNode)) {
+                deleteAtNode = restructure(deleteAtNode);
+            }
+
+            // Return current node as we are done
+            return deleteAtNode;
+        } else if (deleteAtNode->left) {
+            toReturn = deleteAtNode->left;
+        } else if (deleteAtNode->right) {
+            toReturn = deleteAtNode->right;
+        }
+
+        // Single child case we just remove current node and return the child
+        delete deleteAtNode;
+        return toReturn;
+    }
+
+    // Recursively deleting based on the BST's sorted property
+    if (deleteAtNode->key > key) deleteAtNode->left = deleteHelper(deleteAtNode->left, key);
+    else deleteAtNode->right = deleteHelper(deleteAtNode->right, key);
+
+    updateHeight(deleteAtNode);
+
+    // Ensuring balance factor is kept
+    if (!isBalancedFactored(deleteAtNode)) {
+        deleteAtNode = restructure(deleteAtNode);
+    }
+
+    return deleteAtNode;
 }
 
 int AVLTree::getSizeHelper(AVLNode* node) const {

@@ -18,15 +18,16 @@ public:
     /* 4 Main Comparison Functions: Insert, Search, Delete, and Print */
 
     // Inserts a node to the tree (does not insert if the key is a duplicate)
-    void insert(int key);
+    void Insert(int key);
 
     // Searches for a node in the tree and returns true (false if not found)
-    bool search(int key) const;
+    bool Search(int key) const;
 
-    // Delete TODO
+    // Deletes a node in the tree
+    void Delete(int key);
 
     // Prints the level order traversal of the tree
-    void printLevelOrder() const;
+    void Print() const;
 
     /* Utility Functions */
 
@@ -66,6 +67,8 @@ private:
     bool isBalancedFactored(AVLNode* node) const;
 
     AVLNode* insertHelper(AVLNode* insertAtNode, int key);
+
+    AVLNode* deleteHelper(AVLNode* deleteAtNode, int key);
 
     // Rotates the tree where given a node with an unblanced factor
     AVLNode* restructure(AVLNode* restructureAtNode);
