@@ -8,3 +8,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(include)
 
 add_executable(benchmark src/benchmark.cpp src/skip_list.cpp src/balanced_tree.cpp src/main.cpp)
+
+target_compile_options(benchmark PUBLIC -O3)
