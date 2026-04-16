@@ -193,16 +193,12 @@ int AVLTree::getSizeHelper(AVLNode* node) const {
 }
 
 AVLNode* AVLTree::searchHelper(AVLNode* node, int key) const {
-    if (!node) return nullptr;
+    if (!node) return nullptr; // Base case
 
+    // Searches using BST's ordering property
     if (node->key == key) return node;
-
-    AVLNode* left = searchHelper(node->left, key);
-    if (left) return left;
-    AVLNode* right = searchHelper(node->right, key);
-    if (right) return right;
-
-    return nullptr;
+    else if (node->key > key) return searchHelper(node->left, key);
+    else return searchHelper(node->right, key);
 }
 
 AVLNode* AVLTree::restructure(AVLNode* restructureAtNode) {
