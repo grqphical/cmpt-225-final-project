@@ -21,15 +21,14 @@ args = parser.parse_args()
 
 df = pd.read_csv(args.file)
 
-df.set_index("Name", inplace=True)
+df.set_index("Data Structure", inplace=True)
 
 ax = df.plot(kind="bar", figsize=(10, 6))
 
 plt.title(args.title)
 plt.xlabel("Test Cases")
-plt.ylabel("Time (ms)")
+plt.ylabel("Time (μs)")
 plt.xticks(rotation=0)
-plt.legend(title="Data Structure")
 
 plt.tight_layout()
 plt.savefig(args.output)

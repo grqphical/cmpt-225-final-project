@@ -90,8 +90,6 @@ void SkipList::Remove(int data) {
     }
 }
 
-// ... Search and Print remain largely the same ...
-
 bool SkipList::Search(int data) const {
   Node *current = head;
 
