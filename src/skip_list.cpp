@@ -52,6 +52,8 @@ void SkipList::Insert(int64_t data)
 
     current = current->next[0];
 
+    // If the current node is not null and the data we are inserting isn't already
+    // in the skip list, insert the new node
     if (current == nullptr || current->data != data)
     {
         int newLevel = GetRandomLevel();
@@ -67,6 +69,7 @@ void SkipList::Insert(int64_t data)
 
         Node *newNode = Node::Create(data, newLevel);
 
+        // Update pointers to ensure order is maintained
         for (int i = 0; i <= newLevel; i++)
         {
             newNode->next[i] = update[i]->next[i];
